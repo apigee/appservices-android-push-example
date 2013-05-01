@@ -3,6 +3,9 @@ apigee-android-push-test
 
 A simple Android app that registers itself and pushes a GCM notification to itself via Apigee's App Services.
 
+NOTE: 
+If you are using eclipse, double check to see that eclipse is importing all the JAR files in the lib folder 
+properly into the eclipse environment.
 
 Copyright
 =========
