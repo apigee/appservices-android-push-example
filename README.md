@@ -1,7 +1,13 @@
 apigee-android-push-test
 ====================
 
-A simple Android app that registers itself and pushes a GCM notification to itself via Apigee's App Services.
+A simple Android app that registers and pushes a GCM notification to itself via Apigee's App Services.
+
+To run:
+
+1. Change the GCM_SENDER_ID to your Google API Project Number
+2. Set the API_URL, ORG, APP, USER, and PASSWORD for your App Services app.
+3. Build and run!
 
 NOTE: 
 If you are using eclipse, double check to see that eclipse is importing all the JAR files in the lib folder 
