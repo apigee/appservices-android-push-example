@@ -33,7 +33,6 @@ public class MainActivity extends Activity {
 
     initUI();
 
-    //Assumes that user "scott" has been created.
     AppServices.login(this);
   }
 

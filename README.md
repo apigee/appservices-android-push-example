@@ -9,9 +9,6 @@ To run:
 2. Set the API_URL, ORG, APP, USER, and PASSWORD for your App Services app.
 3. Build and run!
 
-NOTE: 
-If you are using eclipse, double check to see that eclipse is importing all the JAR files in the lib folder 
-properly into the eclipse environment.
 
 Copyright
 =========

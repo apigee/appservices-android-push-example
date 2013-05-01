@@ -85,6 +85,7 @@ public final class AppServices {
 
       @Override
       public void onException(Exception e) {
+    	displayMessage(context, "Register Exception: " + e);
         Log.i(TAG, "register exception: " + e);
       }
 
