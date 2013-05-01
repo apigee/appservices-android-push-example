@@ -44,7 +44,7 @@ public class MainActivity extends Activity {
     sendButton = (Button)findViewById(R.id.sendButton);
     sendButton.setOnClickListener(new View.OnClickListener() {
       public void onClick(View v) {
-        AppServices.sendMyselfANotification();
+        AppServices.sendMyselfANotification(v.getContext());
       }
     });
 
@@ -96,4 +96,5 @@ public class MainActivity extends Activity {
     super.onDestroy();
     unregisterReceiver(notificationReceiver);
   }
+
 }

@@ -3,7 +3,6 @@ package com.ganyo.pushtest;
 import android.content.Context;
 
 import android.util.Log;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.usergrid.android.client.Client;
 import org.usergrid.android.client.callbacks.ApiResponseCallback;
 import org.usergrid.android.client.callbacks.DeviceRegistrationCallback;
@@ -13,7 +12,6 @@ import org.usergrid.java.client.response.ApiResponse;
 import org.usergrid.java.client.utils.JsonUtils;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import static com.ganyo.pushtest.Util.*;
 import static com.ganyo.pushtest.Settings.*;
@@ -36,8 +34,7 @@ public final class AppServices {
   static void login(final Context context) {
 
     if (USER != null) {
-      Client client = AppServices.getClient();
-      client.authorizeAppUserAsync(USER, PASSWORD, new ApiResponseCallback() {
+      getClient().authorizeAppUserAsync(USER, PASSWORD, new ApiResponseCallback() {
 
         @Override
         public void onResponse(ApiResponse apiResponse) {
@@ -61,32 +58,29 @@ public final class AppServices {
   static void register(final Context context, final String regId) {
     Log.i(TAG, "registering device: " + regId);
 
-    Map<String, Object> properties = new HashMap<String, Object>();
-    String notifierKey = NOTIFIER + ".notifier.id";
-    properties.put(notifierKey, regId);
-    getClient().registerDeviceAsync(context, properties, new DeviceRegistrationCallback() {
+    getClient().registerDeviceForPushAsync(context, NOTIFIER, regId, null, new DeviceRegistrationCallback() {
 
       @Override
       public void onResponse(Device device) {
         Log.i(TAG, "register response: " + device);
         AppServices.device = device;
 
-        // optionally connect device to current User
-        if (getClient().getLoggedInUser() != null) {
-          getClient().connectEntitiesAsync("users", getClient().getLoggedInUser().getUuid().toString(),
-                                           "devices", device.getUuid().toString(),
-                                           new ApiResponseCallback() {
-            @Override
-            public void onResponse(ApiResponse apiResponse) {
-              Log.i(TAG, "connect response: " + apiResponse);
-            }
-
-            @Override
-            public void onException(Exception e) {
-              Log.i(TAG, "connect exception: " + e);
-            }
-          });
-        }
+        // uncomment to optionally connect Device to current User
+//        if (getClient().getLoggedInUser() != null) {
+//          getClient().connectEntitiesAsync("users", getClient().getLoggedInUser().getUuid().toString(),
+//                                           "devices", device.getUuid().toString(),
+//                                           new ApiResponseCallback() {
+//            @Override
+//            public void onResponse(ApiResponse apiResponse) {
+//              Log.i(TAG, "connect response: " + apiResponse);
+//            }
+//
+//            @Override
+//            public void onException(Exception e) {
+//              Log.i(TAG, "connect exception: " + e);
+//            }
+//          });
+//        }
       }
 
       @Override
@@ -99,8 +93,11 @@ public final class AppServices {
     });
   }
 
-  static void sendMyselfANotification() {
-    if (device != null) {
+  static void sendMyselfANotification(Context context) {
+    if (device == null) {
+      displayMessage(context, "Device not registered.");
+    }
+    else {
       String entityPath = "devices/" + device.getUuid().toString() + "/notifications";
       Entity notification = new Entity(entityPath);
 
