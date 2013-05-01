@@ -3,14 +3,15 @@ package com.ganyo.pushtest;
 /** Change these values to match your setup! */
 public class Settings {
 
-  // Google project id
-  static final String GCM_SENDER_ID = "978423379483";
+  // Google Client Id from Google API Console
+  static final String GCM_SENDER_ID = "854525328487";
 
+  //Notifier Name created in app services
   static final String NOTIFIER = "google";
 
-  static final String API_URL = "http://10.0.1.3:8080";
-  static final String ORG = "test-organization";
-  static final String APP = "test-app";
+  static final String API_URL = "https://api.usergrid.com";
+  static final String ORG = "<your_org>";
+  static final String APP = "sandbox";
 
   // may set to null if your organization needs no login
   static final String USER = "scott";
