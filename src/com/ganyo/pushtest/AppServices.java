@@ -38,13 +38,14 @@ public final class AppServices {
 
         @Override
         public void onResponse(ApiResponse apiResponse) {
-          Log.i(TAG, "authorize response: " + apiResponse);
+          Log.i(TAG, "login response: " + apiResponse);
           registerPush(context);
         }
 
         @Override
         public void onException(Exception e) {
-          Log.i(TAG, "authorize exception: " + e);
+          displayMessage(context, "Login Exception: " + e);
+          Log.i(TAG, "login exception: " + e);
         }
       });
     } else {
@@ -64,23 +65,25 @@ public final class AppServices {
       public void onResponse(Device device) {
         Log.i(TAG, "register response: " + device);
         AppServices.device = device;
+        displayMessage(context, "Device registered as: " + regId);
 
-        // uncomment to optionally connect Device to current User
-//        if (getClient().getLoggedInUser() != null) {
-//          getClient().connectEntitiesAsync("users", getClient().getLoggedInUser().getUuid().toString(),
-//                                           "devices", device.getUuid().toString(),
-//                                           new ApiResponseCallback() {
-//            @Override
-//            public void onResponse(ApiResponse apiResponse) {
-//              Log.i(TAG, "connect response: " + apiResponse);
-//            }
-//
-//            @Override
-//            public void onException(Exception e) {
-//              Log.i(TAG, "connect exception: " + e);
-//            }
-//          });
-//        }
+        // connect Device to current User - if there is one
+        if (getClient().getLoggedInUser() != null) {
+          getClient().connectEntitiesAsync("users", getClient().getLoggedInUser().getUuid().toString(),
+                                           "devices", device.getUuid().toString(),
+                                           new ApiResponseCallback() {
+            @Override
+            public void onResponse(ApiResponse apiResponse) {
+              Log.i(TAG, "connect response: " + apiResponse);
+            }
+
+            @Override
+            public void onException(Exception e) {
+              displayMessage(context, "Connect Exception: " + e);
+              Log.i(TAG, "connect exception: " + e);
+            }
+          });
+        }
       }
 
       @Override
@@ -90,13 +93,13 @@ public final class AppServices {
       }
 
       @Override
-      public void onDeviceRegistration(Device device) { /* this won't be called */}
+      public void onDeviceRegistration(Device device) { /* this won't ever be called */ }
     });
   }
 
-  static void sendMyselfANotification(Context context) {
+  static void sendMyselfANotification(final Context context) {
     if (device == null) {
-      displayMessage(context, "Device not registered.");
+      displayMessage(context, "Device not registered (yet?)");
     }
     else {
       String entityPath = "devices/" + device.getUuid().toString() + "/notifications";
@@ -114,6 +117,7 @@ public final class AppServices {
 
         @Override
         public void onException(Exception e) {
+          displayMessage(context, "Send Exception: " + e);
           Log.i(TAG, "send exception: " + e);
         }
       });

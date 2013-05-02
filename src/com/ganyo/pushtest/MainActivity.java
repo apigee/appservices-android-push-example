@@ -65,11 +65,7 @@ public class MainActivity extends Activity {
        * Take some action upon receiving a push notification here!
        **/
       String message = intent.getExtras().getString(EXTRA_MESSAGE);
-      
-      if(message == null)
-      {
-    	  message = "Empty Message";
-      }
+      if (message == null) { message = "Empty Message"; }
       
       Log.i(TAG, message);
       messageTextView.append("\n" + message);
